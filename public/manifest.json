@@ -1,9 +1,13 @@
 {
-    "name": "WebChatExtension",
-    "description": "Build an Extension!",
-    "version": "1.0",
-    "manifest_version": 3,
-    "action": {
-        "default_popup": "popup.html"
-      }
-  }
+  "name": "WebChatExtension",
+  "description": "Build an Extension!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "popup.js"
+  },
+  "permissions": ["activeTab", "tabs"]
+}

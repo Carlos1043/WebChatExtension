@@ -4,7 +4,10 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    popup: "./src/popup.jsx",
+    popup: "./src/popup.tsx",
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".jsx"],
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -13,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(t|j)sx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
