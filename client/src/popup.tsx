@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
-import { render } from "react-dom";
+import React from "react";
+import { createRoot } from "react-dom/client";
 
 import { AppStoreProvider } from "./providers/AppStoreProvider";
 import { appStore } from "./stores/App";
-import BackgroundScript from "./background";
+import ContentScript from "./content";
 
 export default function Popup() {
   return (
     <AppStoreProvider appStore={appStore}>
-      <BackgroundScript />
+      <ContentScript />
     </AppStoreProvider>
   );
 }
 
-render(<Popup />, document.getElementById("root"));
+const root = createRoot(document.getElementById("root")!);
+root.render(<Popup />);
