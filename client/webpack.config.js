@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   entry: {
     popup: "./src/popup.tsx",
-    background: "./src/background.js"
+    background: "./src/background.ts"
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".jsx"]

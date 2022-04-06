@@ -1,21 +1,21 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 
-type Messages = {
-  [url: string]: {}[];
-};
+type Message = {};
 
 export class AppStore {
-  @observable
-  messages: Messages = {};
-
-  @action
-  newTab(url: string) {
-    this.messages[url] = [];
+  constructor() {
+    makeObservable(this);
   }
 
+  @observable
+  url?: string = undefined;
+
+  @observable
+  messages: Message[] = [];
+
   @action
-  closeTab(url: string) {
-    delete this.messages[url];
+  setUrl(value: string) {
+    this.url = value;
   }
 }
 

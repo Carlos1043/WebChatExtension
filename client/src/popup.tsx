@@ -13,5 +13,9 @@ export default function Popup() {
   );
 }
 
-const root = createRoot(document.getElementById("root")!);
+const rootEl = document.createElement("div");
+document.body.append(rootEl);
+
+const root = createRoot(rootEl);
+
 root.render(<Popup />);
