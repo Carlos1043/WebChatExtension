@@ -1,17 +1,12 @@
 import React, { createContext, ReactElement } from "react";
 import { observer } from "mobx-react";
 
-import { AppStore } from "../stores/App.ts";
+import { appStore, AppStore } from "../stores/AppStore";
 
-type AppStoreProviderProps = {
-  appStore: AppStore;
-  children: ReactElement;
-};
-
-export const AppStoreContext = createContext();
+export const AppStoreContext = createContext<AppStore>(appStore);
 
 export const AppStoreProvider = observer(
-  ({ appStore, children }: AppStoreProviderProps) => {
+  ({ children }: { children: ReactElement }) => {
     return (
       <AppStoreContext.Provider value={appStore}>
         {children}
