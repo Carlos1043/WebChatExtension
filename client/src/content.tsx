@@ -5,7 +5,7 @@ import { AppStoreProvider } from "./providers/AppStoreProvider";
 import ContentScript from "./ContentScript";
 import App from "./components/App";
 
-export default function Popup() {
+export default function Content() {
   return (
     <AppStoreProvider>
       <>
@@ -17,8 +17,9 @@ export default function Popup() {
 }
 
 const rootEl = document.createElement("div");
+rootEl.setAttribute("id", "root-wse");
+
 document.body.append(rootEl);
 
 const root = createRoot(rootEl);
-
-root.render(<Popup />);
+root.render(<Content />);
