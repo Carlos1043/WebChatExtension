@@ -3,11 +3,15 @@ import { createRoot } from "react-dom/client";
 
 import { AppStoreProvider } from "./providers/AppStoreProvider";
 import ContentScript from "./ContentScript";
+import App from "./components/App";
 
 export default function Popup() {
   return (
     <AppStoreProvider>
-      <ContentScript />
+      <>
+        <ContentScript />
+        <App />
+      </>
     </AppStoreProvider>
   );
 }
