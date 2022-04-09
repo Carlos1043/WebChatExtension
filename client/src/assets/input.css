@@ -9,4 +9,16 @@
 }
 
 @layer utilities {
+  .background {
+    background: rgba(200, 200, 200, 0.7);
+  }
+
+  .custom-border {
+    @apply border-solid border-gray-400 border-[1px];
+  }
+}
+
+#root-wse *,
+#root-wse *::placeholder {
+  color: black !important;
 }

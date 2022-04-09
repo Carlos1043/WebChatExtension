@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Chat from "./Chat";
 
 export default function App() {
-  const [isListeningPos, setIsListeningPos] = useState(false);
-  const [isListeningSize, setIsListeningSize] = useState(false);
+  const isListeningPosRef = useRef(false);
+  const isListeningSizeRef = useRef(false);
+  const [pos, setPos] = useState({ top: 5, left: 5 });
   const startPosRef = useRef<{
     top: number;
     left: number;
@@ -11,85 +13,93 @@ export default function App() {
     height: number;
     width: number;
   } | null>(null);
-  const [pos, setPos] = useState({ top: 5, left: 5 });
-  const [size, setSize] = useState({ height: 300, width: 200 });
+  const [size, setSize] = useState({ height: 400, width: 300 });
   const mouseStartPosRef = useRef<{ top: number; left: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Handling position change
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isListeningPos) {
+    if (isListeningPosRef.current) {
       startPosRef.current = pos;
-      setIsListeningPos(false);
+      isListeningPosRef.current = false;
+      containerRef.current!.style.cursor = "-webkit-grab";
       return;
     }
 
-    setIsListeningPos(true);
+    isListeningPosRef.current = true;
+    containerRef.current!.style.cursor = "grabbing";
     startPosRef.current = pos;
     mouseStartPosRef.current = { top: e.clientY, left: e.clientX };
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!isListeningPos) return;
+  const handleMouseMove = (e: MouseEvent) => {
+    if (isListeningPosRef.current) {
+      setPos({
+        top:
+          startPosRef.current!.top +
+          (e.clientY - mouseStartPosRef.current!.top),
+        left:
+          startPosRef.current!.left +
+          (e.clientX - mouseStartPosRef.current!.left)
+      });
+    }
 
-    setPos({
-      top:
-        startPosRef.current!.top + (e.clientY - mouseStartPosRef.current!.top),
-      left:
-        startPosRef.current!.left + (e.clientX - mouseStartPosRef.current!.left)
-    });
+    if (isListeningSizeRef.current) {
+      setPos({
+        top:
+          startPosRef.current!.top +
+          (e.clientY - mouseStartPosRef.current!.top),
+        left: startPosRef.current!.left
+      });
+      setSize({
+        height:
+          startSizeRef.current!.height -
+          (e.clientY - mouseStartPosRef.current!.top),
+        width:
+          startSizeRef.current!.width +
+          (e.clientX - mouseStartPosRef.current!.left)
+      });
+    }
   };
 
-  // Handling size change
   const handleSizeButtonClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-
-    if (isListeningSize) {
+    if (isListeningSizeRef.current) {
+      startPosRef.current = pos;
       startSizeRef.current = size;
-      setIsListeningSize(false);
+      isListeningSizeRef.current = false;
       return;
     }
 
-    setIsListeningSize(true);
+    isListeningSizeRef.current = true;
+    startPosRef.current = pos;
     startSizeRef.current = size;
     mouseStartPosRef.current = { top: e.clientY, left: e.clientX };
   };
 
-  const handleSizeButtonMouseMove = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    if (!isListeningSize) return;
-
-    setSize({
-      height:
-        startSizeRef.current!.height +
-        (e.clientY - mouseStartPosRef.current!.top),
-      width:
-        startSizeRef.current!.width +
-        (e.clientX - mouseStartPosRef.current!.left)
-    });
-  };
+  useEffect(() => {
+    document.body.addEventListener("mousemove", handleMouseMove);
+  }, []);
 
   return (
     <div
-      className="fixed z-[1000000] bg-blue-500 rounded-lg"
+      ref={containerRef}
+      className="fixed z-[1000000] rounded-lg custom-border backdrop-blur-sm background text-black"
       style={{
         top: pos.top,
         left: pos.left,
         height: size.height,
-        width: size.width,
-        cursor: isListeningPos ? "grabbing" : "-webkit-grab"
+        width: size.width
       }}
       onClick={handleClick}
-      onMouseMove={handleMouseMove}
     >
       <div className="relative w-full h-full">
+        <Chat />
         <div
-          className="absolute bottom-0 right-0 cursor-nwse-resize w-5 h-5 bg-red-900 rounded-br-lg"
+          className="absolute top-0 right-0 cursor-nesw-resize w-5 h-5 bg-gray-400 rounded-tr-lg rounded-bl-lg"
           onClick={handleSizeButtonClick}
-          onMouseMove={handleSizeButtonMouseMove}
-        ></div>
+        />
       </div>
     </div>
   );
